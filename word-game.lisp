@@ -34,7 +34,8 @@
 		  (if (check-guess guess chosen-word)
 		      (play-round lives-remaining
 				  chosen-word
-				  (update-word-so-far guess
+				  (update-word-so-far 0
+						      guess
 						      chosen-word
 						      word-so-far)
 				  guesses)
@@ -52,18 +53,22 @@
   (let* ((ptrn (ppcre:create-scanner (string-trim '(#\r #\n) guess))))
     (ppcre:scan ptrn chosen-word)))
 
-(defun update-word-so-far (guess chosen-word word-so-far)
-  (let ((guess-char (char guess 0)))
-    (defun do-it (c word-so-far)
-      (if (eq c (length chosen-word))
-	      word-so-far
-	      (let ((word-char (char chosen-word c))
-		    (word-so-far-char (char word-so-far c)))
-		(if (and (equal #\* word-so-far-char)
-			 (equal guess-char word-char))
-		    (do-it (+ c 1) (interpolate-char guess-char word-so-far c))
-		    (do-it (+ c 1) word-so-far))))))
-    (do-it 0 word-so-far))
+(defun update-word-so-far (c guess chosen-word word-so-far)
+  (if (eq c (length chosen-word))
+      word-so-far
+      (let ((guess-char (char guess 0))
+	    (word-char (char chosen-word c))
+	    (word-so-far-char (char word-so-far c)))
+	(if (and (equal #\* word-so-far-char)
+		 (equal guess-char word-char))
+	    (update-word-so-far (+ c 1)
+	      guess
+	      chosen-word
+	      (interpolate-char guess-char word-so-far c))
+	    (update-word-so-far (+ c 1)
+	      guess
+	      chosen-word
+	      word-so-far)))))
 
 (defun interpolate-char (char string index)
   (let* ((first-part (if (> index 0)
@@ -77,7 +82,7 @@
 (defun get-word ()
   (let* ((words (read-words))
 	 (r (random (length words) (make-random-state t))))
-    (first (subseq words r (+ r 1)))))
+    (string-downcase (first (subseq words r (+ r 1))))))
 
 (defun read-words ()
   (let* ((words (alexandria:read-file-into-string *words-list*))
