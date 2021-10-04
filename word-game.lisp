@@ -1,6 +1,15 @@
 ;;;; A simple "hang-man"-type game.
 
-;;;; By Dave Wilson, October 2020
+;;;; By Dave Wilson, October 2020, October 2021
+
+;;;; To run this you'll need:
+;;;; sbcl (http://www.sbcl.org)
+;;;; quicklisp (https://www.quicklisp.org/beta/)
+
+;;;; load file: sbcl --load word-game.lisp
+;;;; then:
+;;;; (in-package :word-game)
+;;;; (game)
 
 (in-package :cl)
 
@@ -15,9 +24,9 @@
 (in-package :word-game)
 
 ;;; quicklisp packages
-(ql:quickload "alexandria")
-(ql:quickload "split-sequence")
-(ql:quickload "cl-ppcre")
+(ql:quickload "alexandria") ;; read-file-into-string
+(ql:quickload "split-sequence") ;; used for string splitting
+(ql:quickload "cl-ppcre") ;; used for regexs.
 
 ;;; Global variables
 
