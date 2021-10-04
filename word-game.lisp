@@ -137,11 +137,22 @@
 				  word-so-far
 				  (cons (char guess 0) guesses)))))))))
 
-(defun game ()
+(defun begin ()
   "Choose a word and start the game"
   (let* ((chosen-word (get-word))
 	 (obscured-word (make-string
 			 (length chosen-word)
 			 :initial-element #\*)))
     (play-round *number-of-lives* chosen-word obscured-word '())))
+
+(defun pre-game-check ()
+	"Check that we can start the game"
+	(if (probe-file *words-list*)
+		T
+		(progn
+			(format t "Could not find wordlist ~A ~%" *words-list*))))
+
+(defun game ()
+	(when (pre-game-check)
+  	(begin)))
 			   
