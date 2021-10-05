@@ -7,9 +7,6 @@
 ;;;; quicklisp (https://www.quicklisp.org/beta/)
 
 ;;;; load file: sbcl --load word-game.lisp
-;;;; then:
-;;;; (in-package :word-game)
-;;;; (game)
 
 (in-package :cl)
 
@@ -120,20 +117,20 @@
 (defun play-round (lives-remaining chosen-word word-so-far guesses)
   "Play the game"
   (if (= lives-remaining 0)
-      (format t "~%Game Over. The words was ~A.~%" chosen-word)
+      (format t "~%Game Over. The word was ~A.~%" chosen-word)
       (if (equal chosen-word word-so-far)
-	  (format t "~%*** You win! ***~%")
+	  (format t "~%*** You win! The word was ~A ***~%" chosen-word)
 	  (progn
 	    (format t
-		    "~%~A GUESSES: ~A LIVES: ~A~%"
-		    word-so-far
+		    "~%(~A) GUESSES: ~A LIVES: ~A~%"
+				word-so-far
 		    guesses
 		    lives-remaining)
-	    (format t "Guess: ")
+	    (format t "Guess: ~%")
 	    (let ((guess (string-downcase (write-to-string (read)))))
 	      (if (not (is-valid-guess guess guesses))
-		  (play-round lives-remaining chosen-word word-so-far guesses)
-		  (if (check-guess guess chosen-word)
+					(play-round lives-remaining chosen-word word-so-far guesses)
+				(if (check-guess guess chosen-word)
 		      (play-round lives-remaining
 				  chosen-word
 				  (update-word-so-far 0
@@ -165,3 +162,4 @@
 	(when (pre-game-check)
   	(begin)))
 			   
+(game)
